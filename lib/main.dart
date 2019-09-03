@@ -5,6 +5,8 @@ import 'package:flutter_app_test_demo/grid_view/index.dart';
 import 'package:flutter_app_test_demo/grid_view/gridviewpage.dart';
 import 'package:flutter_app_test_demo/list_view/index.dart';
 import 'package:flutter_app_test_demo/sliver_widgets/index.dart';
+import 'package:flutter_app_test_demo/studys/day1/route_callback_param.dart';
+import 'package:flutter_app_test_demo/studys/day1/route_send_param.dart';
 
 // 我是入口，类似于java中的 static main()
 void main() => runApp(MyApp());
@@ -16,28 +18,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //返回给你一个MaterialApp，至于内部还有啥，看参数
     return MaterialApp(
+      //应用名称
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue, //title的背景颜色
       ),
+      routes: {
+        //这里是注册路由表
+        "route_send":(context)=>RouteSendParamPage(),//路由跳转并带参数
+        "route_callback":(context)=>RouteCallBackParmPage(),//路由跳转并带返回值
+      },
       // 这个Widget是我们自定义的
-      home: SecondPage(title: 'Flutter Demos'), //设置Title
+      home: HomePage(title: 'Flutter Demos'), //设置Title
     );
   }
 }
 
 //listView使用 及点击效果
-class SecondPage extends StatefulWidget {
-  SecondPage({Key key, this.title}) : super(key: key);
+//StatefulWidget类本身是不变的
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -51,10 +51,11 @@ class SecondPage extends StatefulWidget {
   final String title;
 
   @override
-  _SecondPageState createState() => _SecondPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _SecondPageState extends State<SecondPage> {
+//State类中持有的状态在widget生命周期中可能改变
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _list = new List();
@@ -67,9 +68,11 @@ class _SecondPageState extends State<SecondPage> {
         ListTile.divideTiles(context: context, tiles: _list).toList();
 
     return new Scaffold(
+      //导航栏
       appBar: new AppBar(
         title: new Text('Flutter ListView'),
       ),
+      //body:new Center将其子组件树对齐到屏幕中心
       body: new Scrollbar(
         // 默认写法
 //         child: new ListView(
@@ -153,23 +156,8 @@ class _SecondPageState extends State<SecondPage> {
               return SliverWidgetsDemo();
             }));
             break;
-
-          default:
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return new AlertDialog(
-                  title: new Text(
-                    'ListViewAlert',
-                    style: new TextStyle(
-                      color: Colors.black54,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  content: new Text('您选择的item内容为:$titleItem'),
-                );
-              },
-            );
+          case "NewRouteDay1"://路由跳转
+          Navigator.pushNamed(context, "route_send");
             break;
         }
       },
@@ -190,7 +178,7 @@ class _SecondPageState extends State<SecondPage> {
     'BasicWidgetsDemo',
     'CustomIconsDemo',
     'SliverWidgetsDemo',
-    'youtube_searched_for',
+    'NewRouteDay1',
     'wifi_tethering',
     'wifi_lock',
     'widgets',
